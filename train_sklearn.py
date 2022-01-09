@@ -20,6 +20,9 @@ X_train, X_test, y_train, y_test = train_test_split(data.data,
                                                     test_size=0.4,
                                                     random_state=1234)
 
+run["dataset/train"] = X_train
+run["dataset/test"] = X_test
+
 params = {'n_estimators': 2,
           'max_depth': 3,
           'min_samples_leaf': 1,
@@ -45,3 +48,13 @@ run['train/f1'] = train_f1
 run['test/f1'] = test_f1
 run["model"].upload('my_model.pkl')
 
+# Get Neptune Run ID of the first, baseline model training run
+baseline_run_id = run['sys/id'].fetch()
+print(baseline_run_id)
+run.stop()
+#update run
+run = neptune.init(project="kaori/practice", 
+                    api_token="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiIyZjZiMDA2YS02MDM3LTQxZjQtOTE4YS1jODZkMTJjNGJlMDYifQ==",
+                    run=baseline_run_id)
+
+run["dataset/y_train"] = y_train
